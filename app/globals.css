@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+/* ── Brand tokens ─────────────────────────────────────────── */
+@theme {
+  --color-forest: #183d2b;
+  --color-deep: #10291e;
+  --color-sage: #879b82;
+  --color-paper: #f7f7f2;
+  --color-ink: #252925;
+  --color-stone: #6b726c;
+  --color-line: #dcdfd6;
+  --color-danger: #a12f2f;
+}
+
+/* `inline` so the next/font CSS variables resolve at use time. */
+@theme inline {
+  --font-heading: var(--font-bricolage), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* ── Base (inside @layer so utilities and components can override it) ── */
+:root {
+  --focus: #183d2b;
+}
+
+.on-dark {
+  --focus: #ffffff;
+}
+
+@layer base {
+  html {
+    scroll-padding-top: 5.5rem; /* clears the sticky header for in-page links */
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1.0625rem;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-heading);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Keyboard focus — visible on every interactive element. */
+  :focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--color-sage);
+    color: var(--color-deep);
+  }
+}
+
+/* ── Layout + type primitives ─────────────────────────────── */
+@layer components {
+  .wrap {
+    width: min(100% - 2.5rem, 72rem);
+    margin-inline: auto;
+  }
+
+  .section {
+    padding-block: clamp(4rem, 8vw, 7rem);
+  }
+
+  .display {
+    font-size: clamp(2.6rem, 6.2vw, 5rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+  }
+
+  .section-title {
+    font-size: clamp(1.9rem, 3.6vw, 2.75rem);
+    font-weight: 800;
+  }
+
+  .lede {
+    font-size: clamp(1.0625rem, 1.5vw, 1.25rem);
+    line-height: 1.6;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 3rem; /* comfortable tap target */
+    padding: 0.7rem 1.4rem;
+    border: 2px solid transparent;
+    border-radius: 0.375rem;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease,
+      border-color 0.15s ease;
+  }
+
+  .btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  .btn-primary {
+    background: var(--color-forest);
+    color: #fff;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--color-deep);
+  }
+
+  .btn-light {
+    background: var(--color-paper);
+    color: var(--color-deep);
+  }
+  .btn-light:hover:not(:disabled) {
+    background: #fff;
+  }
+
+  .btn-outline {
+    border-color: var(--color-forest);
+    color: var(--color-forest);
+  }
+  .btn-outline:hover {
+    background: var(--color-forest);
+    color: #fff;
+  }
+
+  .btn-outline-light {
+    border-color: rgb(255 255 255 / 0.7);
+    color: #fff;
+  }
+  .btn-outline-light:hover {
+    background: #fff;
+    color: var(--color-deep);
+  }
+
+  .btn-sm {
+    min-height: 2.75rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.9375rem;
+  }
+
+  /* Form controls */
+  .field-label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  .field-input {
+    display: block;
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.65rem 0.85rem;
+    border: 1.5px solid #8d948e;
+    border-radius: 0.375rem;
+    background: #fff;
+    color: var(--color-ink);
+    font: inherit;
+    font-size: 1rem; /* 16px+ stops iOS zooming on focus */
+    transition: border-color 0.15s ease;
+  }
+  .field-input:hover {
+    border-color: var(--color-forest);
+  }
+  .field-input[aria-invalid="true"] {
+    border-color: var(--color-danger);
+    border-width: 2px;
+  }
+  textarea.field-input {
+    min-height: 7.5rem;
+    resize: vertical;
+  }
+}
+
+/* Spin only when motion is welcome. */
+@media (prefers-reduced-motion: no-preference) {
+  .spin {
+    animation: spin 0.9s linear infinite;
+  }
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Honeypot: off-screen, not display:none (some bots skip hidden fields). */
+.hp-field {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
